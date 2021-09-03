@@ -1,7 +1,7 @@
 name: flutter_social_share
 description: Share your media on social media
 version: 0.0.1
-homepage:
+homepage: https://github.com/aislandener/flutter_social_share
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
