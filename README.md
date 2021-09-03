@@ -6,11 +6,25 @@ Share your media on social media
 
 ### Android
 
+Add uses permission in  `android/src/main/AndroidManifest.xml`
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dev.aislandener.flutter_social_share_example">
+    
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
+    ...
+</manifest>
+```
+
 Add provider in  `android/src/main/AndroidManifest.xml`
 
 ```xml
 <provider android:name="androidx.core.content.FileProvider"
-    android:authorities="${applicationId}.flutter.social_share" android:exported="false"
+    android:authorities="${applicationId}.flutter.social_share"
+    android:exported="false"
     android:grantUriPermissions="true">
     <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
         android:resource="@xml/file_provider_paths" />
@@ -24,14 +38,25 @@ Create file in `android/src/main/res/xml/file_provider_paths.xml` and add
     <external-path name="external" path="." />
     <external-files-path name="external_files" path="." />
     <external-cache-path name="external_cache" path="." />
+    <files-path name="files" path="." />
 </paths>
 ```
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/), a specialized package that includes
-platform-specific implementation code for Android and/or iOS.
+### iOS
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials, samples, guidance on
-mobile development, and a full API reference.
+Work in process
+
+
+## Usage
+
+### Share to Instagram Story
+
+```dart
+FlutterSocialShare.shareToInstagram(
+  backgroundAssetUri: image_or_movie,
+  stickerAssetUri: image,
+  topColor: Colors.deepPurple,
+  bottomColor: Colors.pinkAccent
+);
+```
 
