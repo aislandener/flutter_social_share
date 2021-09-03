@@ -1,0 +1,40 @@
+import 'dart:async';
+
+import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
+
+class FlutterSocialShare {
+  static const MethodChannel _channel =
+  const MethodChannel('flutter_social_share');
+
+  static Future<String?> get platformVersion async {
+    final String? version = await _channel.invokeMethod('getPlatformVersion');
+    return version;
+  }
+
+  static Future<String?> shareToInstagram({
+    Uri? backgroundAssetUri,
+    Uri? stickerAssetUri,
+    Color? topColor,
+    Color? bottomColor
+  }) async {
+    assert (backgroundAssetUri != null || stickerAssetUri != null);
+
+    final Map<String,String> params = Map();
+
+    if (backgroundAssetUri != null) {
+      params["backgroundAssetUri"] = backgroundAssetUri.toString();
+    }
+    if (stickerAssetUri != null) {
+      params["stickerAssetUri"] = stickerAssetUri.toString();
+    }
+    if (topColor != null) {
+      params["topColor"] = "#${topColor.value.toRadixString(16)}";
+    }
+    if (bottomColor != null) {
+      params["bottomColor"] = "#${bottomColor.value.toRadixString(16)}";
+    }
+
+    return await _channel.invokeMethod('shareToStoryInstagram', params);
+  }
+}
