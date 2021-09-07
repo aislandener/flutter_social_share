@@ -51,12 +51,12 @@ class _MyAppState extends State<MyApp> {
   Future<File> getImageFileFromAssets(String path) async {
     final byteData = await rootBundle.load('assets/$path');
 
-    final file = File('${(await getTemporaryDirectory()).path}/$path');
+    final file =
+        File('${(await getApplicationDocumentsDirectory()).path}/$path');
     await file.writeAsBytes(byteData.buffer
         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
 
     return file;
-
   }
 
   @override
@@ -80,11 +80,13 @@ class _MyAppState extends State<MyApp> {
               children: [
                 Text('Running on: $_platformVersion\n'),
                 ElevatedButton(
-                  onPressed: () async{
-                    var image = (await getImageFileFromAssets("example.jpg")).uri;
-                    var movie = (await getImageFileFromAssets("example.mp4")).uri;
+                  onPressed: () async {
+                    var image =
+                        (await getImageFileFromAssets("example.jpg")).uri;
+                    var movie =
+                        (await getImageFileFromAssets("example.mp4")).uri;
                     var share = await FlutterSocialShare.shareToInstagram(
-                      backgroundAssetUri: movie,
+                      //backgroundAssetUri: movie,
                       stickerAssetUri: image,
                       // topColor: Colors.deepPurple,
                       // bottomColor: Colors.pinkAccent
