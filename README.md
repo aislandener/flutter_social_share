@@ -44,7 +44,14 @@ Create file in `android/src/main/res/xml/file_provider_paths.xml` and add
 
 ### iOS
 
-Work in process
+Add in `ios\Runner\Info.plist`
+
+```xml
+<key>LSApplicationQueriesSchemes</key>
+<array>
+    <string>instagram-stories</string>
+</array>
+```
 
 
 ## Usage
