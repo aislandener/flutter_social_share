@@ -9,44 +9,58 @@ import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import java.io.*
 
-
-class Instagram(private val context: Context?) {
+class Instagram(private val context: Context) {
     var activity: Activity? = null
 
-    fun share(backgroundUri: String?, stickerUri: String?, topColor: String?, bottomColor:String? ): String{
-        val background: Uri? = if(backgroundUri != null) Uri.parse(backgroundUri) else null
-        val sticker: Uri? = if(stickerUri != null) Uri.parse(stickerUri) else null
+    fun share(
+        backgroundUri: String?,
+        stickerUri: String?,
+        topColor: String?,
+        bottomColor: String?,
+    ): String {
+        val background: Uri? = if (backgroundUri != null) Uri.parse(backgroundUri) else null
+        val sticker: Uri? = if (stickerUri != null) Uri.parse(stickerUri) else null
 
         shareToStory(background, sticker, topColor, bottomColor)
         return "Tests: $background / $sticker / $topColor / $bottomColor"
     }
 
-    private fun shareToStory(backgroundUri: Uri?, stickerUri: Uri?, topColor: String?, bottomColor:String?){
+    private fun shareToStory(
+        backgroundUri: Uri?,
+        stickerUri: Uri?,
+        topColor: String?,
+        bottomColor: String?,
+    ) {
         if (backgroundUri == null && stickerUri == null) {
             throw IllegalArgumentException("Background Asset Uri or Sticker Asset Uri must not be null")
         }
 
         val intent = Intent("com.instagram.share.ADD_TO_STORY")
         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        intent.putExtra("source_application", context!!.packageName)
+        intent.putExtra("source_application", context.packageName)
 
         if (backgroundUri != null) {
             val uri = getFileUri(backgroundUri.path.toString())
+            context.grantUriPermission(
+                "com.instagram.android",
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION,
+            )
             val ext = MimeTypeMap.getFileExtensionFromUrl(uri.path)
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
             intent.setDataAndType(uri, mimeType ?: "image/jpeg")
         }
 
         if (stickerUri != null) {
-            if(backgroundUri == null) {
+            if (backgroundUri == null) {
                 intent.type = "image/jpeg"
             }
             val uri = getFileUri(stickerUri.path.toString())
             intent.putExtra("interactive_asset_uri", uri)
-            activity!!.grantUriPermission(
-                    "com.instagram.android",
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+            context.grantUriPermission(
+                "com.instagram.android",
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION,
             )
         }
 
@@ -63,20 +77,20 @@ class Instagram(private val context: Context?) {
 
     private fun getFileUri(path: String): Uri {
         var file = File(path)
-        if(!fileIsOnExternal(file)){
+        if (!fileIsOnExternal(file)) {
             file = copyToExternalFolder(file)
         }
         return FileProvider.getUriForFile(
-                context!!,
-                context.packageName + ".flutter.social_share",
-                file
+            context,
+            context.packageName + ".flutter.social_share",
+            file,
         )
     }
 
     private fun fileIsOnExternal(file: File): Boolean {
         return try {
             val filePath = file.canonicalPath
-            val externalDir = context!!.getExternalFilesDir(null)
+            val externalDir = context.getExternalFilesDir(null)
             externalDir != null && filePath.startsWith(externalDir.canonicalPath)
         } catch (e: IOException) {
             false
@@ -95,7 +109,7 @@ class Instagram(private val context: Context?) {
     }
 
     private fun getExternalFolder(): File {
-        return File(context?.externalCacheDir, "share_to_stories")
+        return File(context.externalCacheDir, "share_to_stories")
     }
 
     @Throws(IOException::class)
@@ -114,16 +128,18 @@ class Instagram(private val context: Context?) {
         }
     }
 
-    private fun post(intent: Intent) {
-        if(context?.packageManager?.resolveActivity(intent, 0) != null){
-            if(activity != null ){
-                activity!!.startActivityForResult(intent,0)
-            }else {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
-            }
+    private fun post(intent: Intent): Boolean {
+        try {
+            activity?.startActivity(intent)
+        } catch (e: Exception) {
+            Log.e(TAG, "error", e)
+            return false
         }
+        return true
     }
 
+    private companion object {
+        private val TAG = Instagram::class.java.name
+    }
 
 }

@@ -13,11 +13,12 @@ class FlutterSocialShare {
     return version;
   }
 
-  static Future<String?> shareToInstagram(
-      {Uri? backgroundAssetUri,
-      Uri? stickerAssetUri,
-      Color? topColor,
-      Color? bottomColor}) async {
+  static Future<String?> shareToInstagram({
+    Uri? backgroundAssetUri,
+    Uri? stickerAssetUri,
+    Color? topColor,
+    Color? bottomColor,
+  }) async {
     assert(backgroundAssetUri != null || stickerAssetUri != null);
 
     final Map<String, String> params = Map();

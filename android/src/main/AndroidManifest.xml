@@ -1,4 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="dev.aislandener.flutter_social_share">
-
-</manifest>
+<manifest package="dev.aislandener.flutter_social_share" />

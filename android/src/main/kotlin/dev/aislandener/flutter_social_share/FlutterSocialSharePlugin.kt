@@ -1,6 +1,5 @@
 package dev.aislandener.flutter_social_share
 
-import androidx.annotation.NonNull
 import dev.aislandener.flutter_social_share.shareToStory.Instagram
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -16,24 +15,26 @@ class FlutterSocialSharePlugin : FlutterPlugin, MethodCallHandler, ActivityAware
 
     private lateinit var channel: MethodChannel
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         instagramStory = Instagram(flutterPluginBinding.applicationContext)
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_social_share")
         channel.setMethodCallHandler(this)
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "getPlatformVersion" -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
             }
             "shareToStoryInstagram" -> {
-                result.success(instagramStory.share(
+                result.success(
+                    instagramStory.share(
                         call.argument("backgroundAssetUri"),
                         call.argument("stickerAssetUri"),
                         call.argument("topColor"),
-                        call.argument("bottomColor")
-                ))
+                        call.argument("bottomColor"),
+                    )
+                )
             }
             else -> {
                 result.notImplemented()
@@ -41,7 +42,7 @@ class FlutterSocialSharePlugin : FlutterPlugin, MethodCallHandler, ActivityAware
         }
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
     }
 
@@ -50,7 +51,7 @@ class FlutterSocialSharePlugin : FlutterPlugin, MethodCallHandler, ActivityAware
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        instagramStory.activity = null;
+        instagramStory.activity = null
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -58,6 +59,6 @@ class FlutterSocialSharePlugin : FlutterPlugin, MethodCallHandler, ActivityAware
     }
 
     override fun onDetachedFromActivity() {
-        instagramStory.activity = null;
+        instagramStory.activity = null
     }
 }
