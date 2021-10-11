@@ -3,6 +3,7 @@
 * Support backgroundTopColor and backgroundBottomColor for iOS
 * Support target31 for Android
 * Update gitignore
+* Update README in Android 11
 
 ## 0.0.2
 

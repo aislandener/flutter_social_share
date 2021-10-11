@@ -42,6 +42,28 @@ Create file in `android/src/main/res/xml/file_provider_paths.xml` and add
 </paths>
 ```
 
+On Android 11 or higher it is necessary to enter a `queries` in `android/src/main/AndroidManifest.xml`
+
+For Images:
+```xml
+<queries>
+    <intent>
+        <action android:name='com.instagram.share.ADD_TO_STORY' />
+        <data android:mimeType='image/*' />
+    </intent>
+</queries>
+```
+
+For Video:
+```xml
+<queries>
+    <intent>
+        <action android:name='com.instagram.share.ADD_TO_STORY' />
+        <data android:mimeType='video/*' />
+    </intent>
+</queries>
+```
+
 ### iOS
 
 Add in `ios\Runner\Info.plist`
